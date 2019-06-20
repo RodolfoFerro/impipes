@@ -17,7 +17,7 @@ keywords = [
 	"Image processing"
 ]
 classifiers = [
-	"Opereating System :: OS Independent"
+	"Operating System :: OS Independent"
 ]
 include = [
 	"LICENSE",
