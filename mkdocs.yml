@@ -8,7 +8,8 @@ site_url: 'https://github.com/RodolfoFerro/impipes'
 nav:
     - Home: index.md
     - Getting started: getting-started.md
-    - User guide: user-guide.md
+    - Structure: 
+      - Pipes: user-guide/pipes.md
     - Examples: examples.md
     - Contribute: contribute.md
     - License: license.md

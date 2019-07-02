@@ -27,12 +27,11 @@ class Pipeline(object):
         self.prefix = ""
 
     def setSufix(self, sufix):
-        """
-        Sets sufix to be added at the end of file names while storing.
+        """Sets sufix to be added at the end of file names while storing.
 
         Parameters
         ----------
-        sufix: str
+        sufix : str
                 A sufix to be added to file names with modified images at
                 their ends.
         """
@@ -41,12 +40,11 @@ class Pipeline(object):
             self.sufix = sufix
 
     def setPrefix(self, prefix):
-        """
-        Sets prefix to be added at the beginning of file names while storing.
+        """Sets prefix to be added at the beginning of file names while storing.
 
         Parameters
         ----------
-        prefix: str
+        prefix : str
                 A prefix to be added to file names with modified images at
                 their beginning.
         """
@@ -55,13 +53,12 @@ class Pipeline(object):
             self.prefix = prefix
 
     def setOutputFileType(self, fileType='jpg'):
-        """
-        Sets format of files for storing modified images. Must be jpg,
+        """Sets format of files for storing modified images. Must be jpg,
         jpeg, png or tif.
 
         Parameters
         ----------
-        fileType: str
+        fileType : str
                 A str describing type of output format ("jpg", "jpeg",
                 "png" or "tif").
         """
@@ -72,14 +69,13 @@ class Pipeline(object):
             print("File type must be jpg, jpeg, png or tif")
 
     def setOutputPath(self, path):
-        """
-        Sets path to a folder in which modifed images will be stored.
+        """Sets path to a folder in which modifed images will be stored.
         If the folder does not exist it will be created.
 
         Parameters
         ----------
-        path: str
-                The path to the output folder like r"c:/path/to/output/folder"
+        path : str
+                The path to the output folder like r"~/path/to/output/folder"
         """
 
         self.outputPath = path
@@ -90,27 +86,25 @@ class Pipeline(object):
                 print(error)
 
     def addImage(self, imagePath):
-        """
-        Adds a raw image file to be proccessed to the pipeline.
+        """Adds a raw image file to be proccessed to the pipeline.
 
         Parameters
         ----------
-        imagePath: str
-                The path to an image file like r"c:/path/to/my/image.jpg"
+        imagePath : str
+                The path to an image file like r"~/path/to/my/image.jpg"
         """
 
         self.images.append(imagePath)
 
     def addInputFolder(self, path):
-        """
-        Adds a folder with image files to be proccessed to the pipeline.
-        Image files (jpg, jpeg, png or tif) are searched in the foder
+        """Adds a folder with image files to be proccessed to the pipeline.
+        Image files (jpg, jpeg, png or tif) are searched in the folder
         and its subfolders.
 
         Parameters
         ----------
-        path: str
-                The path to image files like r"c:/path/to/image/files"
+        path : str
+                The path to image files like r"~/path/to/image/files"
         """
 
         self.inputPath = path
@@ -121,12 +115,11 @@ class Pipeline(object):
                     self.addImage(os.path.join(root, name))
 
     def add(self, item):
-        """
-        Adds a filter/image process to the pipeline.
+        """Adds a filter/image process to the pipeline.
 
         Parameters
         ----------
-        item: files.Filter
+        item : files.Filter
                 An instance of a filter class. For example Kernel(),
                 CLAHE() or Dehaze() etc.
         """
@@ -134,12 +127,11 @@ class Pipeline(object):
         self.pipeline.append(item)
 
     def setPipeline(self, pipeline):
-        """
-        Sets a sequence of filters/image processes to be applied to raw images.
+        """Sets a sequence of filters/image processes to be applied to raw images.
 
         Parameters
         ----------
-        pipeline: list
+        pipeline : list
                 A list of instances of a filter classes.
                 For example [Kernel(), CLAHE(), Dehaze()] etc.
         """
@@ -147,14 +139,13 @@ class Pipeline(object):
         self.pipeline = pipeline
 
     def saveModified(self, image, fileName):
-        """
-        Stores a modifed image in a file.
+        """Stores a modifed image in a file.
 
         Parameters
         ----------
-        image: numpy.ndarray
+        image : numpy.ndarray
                 A NumPy's array containing an image.
-        fileName: str
+        fileName : str
                 Name of the image file.
         """
 
@@ -168,12 +159,11 @@ class Pipeline(object):
             print(error)
 
     def show(self, image):
-        """
-        Displays an image.
+        """Displays an image.
 
         Parameters
         ----------
-        image: numpy.ndarray
+        image : numpy.ndarray
                 A NumPy's array containing an image.
         """
 
@@ -181,15 +171,14 @@ class Pipeline(object):
         plt.show()
 
     def process(self, image, display_steps=False):
-        """
-        Applies a seqence of filters/image processes defined with add() or
+        """Applies a seqence of filters/image processes defined with add() or
         setPipeline() to an image.
 
         Parameters
         ----------
-        image: numpy.ndarray
+        image : numpy.ndarray
                 A NumPy's array containing an image.
-        display_steps: bool
+        display_steps : bool
                 If True image is displayed after each filter/image process
                 is applied. Default is False.
 
@@ -220,21 +209,20 @@ class Pipeline(object):
         return temp
 
     def run(self, save_files=True, display_steps=False, return_list=False):
-        """
-        Applies a seqence of filters/image processes defined with add() or
+        """Applies a seqence of filters/image processes defined with add() or
         setPipeline() to images defined with addImage() or addInputFolder().
 
         Parameters
         ----------
-        display_steps: bool
+        display_steps : bool
                 If True images are displayed after each filter/image
                 process is applied. Default is False.
-        save_files: bool
+        save_files : bool
                 If True modified imagea are saved in a folder set with
                 setOutputPath() according to settings made with
                 setOutputFileType(), setSufix() and setPrefix().
                 Default is True.
-        return_list: bool
+        return_list : bool
                 If True the method returns a list of modified images.
                 Default is False.
 
@@ -263,9 +251,6 @@ class Pipeline(object):
 
 
 def example():
-    """
-    TODO. Example function.
-    """
     img_url = "https://rodolfoferro.xyz/assets/images/dog_original.jpeg"
     wget.download(img_url, out='dog.jpg')
     cwd = os.getcwd()
