@@ -1,18 +1,19 @@
 [tool.poetry]
 name = "impipes"
-version = "0.1.0"
+version = "0.1.5"
 description = ""
 authors = [
 	"Rodolfo Ferro <rodolfoferroperez@gmail.com>",
+	"Lukasz Kaczmarek <lukaszk76@gmail.com>",
 	"Cristian Vargas",
-	"Lukasz Kaczmarek"
+	"Ramón Ontiveros <ramontiveros@gmail.com>"
 ]
 license = "MIT"
 readme = "README.md"
 # homepage = "https://github.com/RodolfoFerro/impipes"
 repository = "https://github.com/RodolfoFerro/impipes"
 keywords = [
-	"Image transformations",
+	"Image enhancement",
 	"Image pipelines",
 	"Image processing"
 ]
