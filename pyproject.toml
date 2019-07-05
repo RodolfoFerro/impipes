@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "impipes"
-version = "0.1.5"
+version = "0.1.7"
 description = ""
 authors = [
 	"Rodolfo Ferro <rodolfoferroperez@gmail.com>",
@@ -10,7 +10,7 @@ authors = [
 ]
 license = "MIT"
 readme = "README.md"
-# homepage = "https://github.com/RodolfoFerro/impipes"
+homepage = "https://impipes.rtfd.io"
 repository = "https://github.com/RodolfoFerro/impipes"
 keywords = [
 	"Image enhancement",
