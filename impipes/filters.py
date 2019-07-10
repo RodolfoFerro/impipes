@@ -9,6 +9,11 @@ import numpy as np
 import cv2
 from scipy.ndimage.filters import median_filter
 
+import os
+from fastai.basic_train import load_learner
+from fastai.torch_core import tensor, to_np
+from fastai.vision import ImageImageList, get_transforms, imagenet_stats, Image
+import wget
 
 class Filter(object):
     """
@@ -457,3 +462,48 @@ class CLAHE(Filter):
 
             self.filteredImage = cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
         return self.filteredImage
+    
+class SuperRes(Filter):
+    '''
+    Inputs:
+        ks : Kernel size of Gaussian blur filter, has to be odd.
+    '''
+    def __init__(self, image=None, ks:int = 3):
+        self.ks = ks
+        if image is not None:
+            self.setImage(image)
+            self.filteredImage = None
+        
+        #Load model
+        self.model_path = './model'
+        weights = self.model_path+'/export.pkl'
+        if not os.path.isdir(self.model_path):
+            os.mkdir(self.model_path)
+        if not os.path.exists(weights):
+            print('Downloading model weights.')
+            wget.download('https://www.dropbox.com/s/3q219uhh1uc0xmx/export.pkl?dl=1',self.model_path+'/export.pkl')
+            print('Download complete')
+        
+        #Create model and load weights
+        self.sr_model = load_learner(self.model_path)
+        self.size = 500
+        self.sr_model.data = self.get_data()
+        
+    def get_data(self, size:int = 500):
+        data = (ImageImageList.from_folder(self.model_path, ignore_empty=True).split_none()
+          .label_from_func(lambda x: x)
+          .transform(get_transforms(), size=500, tfm_y=True)
+          .databunch(bs=1).normalize(imagenet_stats, do_y=True))
+        data.c = 3
+        return data
+    
+    def run(self):
+        inp = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)/255.
+        blur = cv2.GaussianBlur(inp,(self.ks,self.ks),0)
+        blur = Image(tensor(blur).float().permute(2,0,1))
+        _, img_hr, _ = self.sr_model.predict(blur)
+        self.filtered_image =   cv2.cvtColor(to_np(img_hr.permute(1,2,0)), cv2.COLOR_BGR2RGB) * 255.
+        return self.filtered_image.astype(np.uint8)
+
+
+

@@ -274,7 +274,22 @@ def example():
 
     for image in modified_images:
         pipeline.show(image)
+        
+def superres_example():
+    test_path = './superres_test.tif'
+    if not os.path.exists(test_path):
+        print('Downloading test image.')
+        wget.download('https://www.dropbox.com/s/ybventnkdvymn8c/superres_test.tif?dl=1',test_path)
+        print('Download complete.')
+    pipeline = Pipeline()                 #create an instance of Pipeline()
+    pipeline.addImage(test_path)    #set the file with image to be processed
+    pipeline.setPrefix("filtered_")             #sets a prefix to be added at the beginning file names with modified images
+    pipeline.setSufix("")                       #sets a sufix to be added at the end of file names with modified images
+    pipeline.setOutputFileType("jpg")           #modified images shall be stored as tif files
+    pipeline.setOutputPath('./')           #sets a path to a folder where modified images are to be stored
+    pipeline.add(filters.SuperRes(ks=23))
 
+    pipeline.run(save_files=True) 
 
 if __name__ == "__main__":
     example()
