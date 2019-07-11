@@ -464,11 +464,27 @@ class CLAHE(Filter):
         return self.filteredImage
     
 class SuperRes(Filter):
-    '''
-    Inputs:
-        ks : Kernel size of Gaussian blur filter, has to be odd.
-    '''
-    def __init__(self, image=None, ks:int = 3):
+    """
+    Increases the resolution of an image. The process involves first blurring the image using a Gaussian blur to smoothen pixels, 
+    after which it is fed into a U-net model that enhances the features of the blurred image. 
+    
+    An adapted implementation of https://medium.com/omdena/pushing-the-limits-of-open-source-data-enhancing-satellite-imagery-through-deep-learning-9d8a3bbc0e0a .
+
+    Parameters
+    ----------
+    img : numpy.ndarray
+        A NumPy's ndarray from cv2.imread as an input.
+    ks : int
+        Kernel size of Gaussian blur and has to be odd. The optimal size here depends on the input image. From experience, a             bigger kernel size works better for small images, and vice versa (requires more experimenting).
+    size: int
+        Size of output image after passing it through the U-net model.
+        
+    Returns
+    -------
+    numpy.ndarray
+        A NumPy's ndarray of an image.
+    """
+    def __init__(self, image=None, ks:int = 3, size:int = 500):
         self.ks = ks
         if image is not None:
             self.setImage(image)
@@ -486,10 +502,11 @@ class SuperRes(Filter):
         
         #Create model and load weights
         self.sr_model = load_learner(self.model_path)
-        self.size = 500
-        self.sr_model.data = self.get_data()
+        self.size = size
+        self.sr_model.data = self.get_data(self.size)
         
     def get_data(self, size:int = 500):
+        #Creates a dummy databunch for the model.
         data = (ImageImageList.from_folder(self.model_path, ignore_empty=True).split_none()
           .label_from_func(lambda x: x)
           .transform(get_transforms(), size=500, tfm_y=True)
@@ -502,7 +519,7 @@ class SuperRes(Filter):
         blur = cv2.GaussianBlur(inp,(self.ks,self.ks),0)
         blur = Image(tensor(blur).float().permute(2,0,1))
         _, img_hr, _ = self.sr_model.predict(blur)
-        self.filtered_image =   cv2.cvtColor(to_np(img_hr.permute(1,2,0)), cv2.COLOR_BGR2RGB) * 255.
+        self.filtered_image =  cv2.cvtColor(to_np(img_hr.permute(1,2,0)), cv2.COLOR_BGR2RGB) * 255.
         return self.filtered_image.astype(np.uint8)
 
 
