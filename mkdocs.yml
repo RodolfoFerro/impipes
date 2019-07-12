@@ -1,0 +1,41 @@
+# Project information
+site_name: 'impipes'
+site_description: 'Build image pipelines in a simple way.'
+site_author: 'Rodolfo Ferro'
+site_url: 'https://github.com/RodolfoFerro/impipes'
+
+# Navigation
+nav:
+    - Home: index.md
+    - Getting started: getting-started.md
+    - Structure: 
+      - Pipes: user-guide/pipes.md
+    - Examples: examples.md
+    - Contribute: contribute.md
+    - License: license.md
+
+# Repository
+repo_name: 'RodolfoFerro/impipes'
+repo_url: 'https://github.com/RodolfoFerro/impipes'
+
+# Configuration
+theme:
+  name: 'material'
+  palette:
+    primary: 'Red'
+    accent: 'Red'
+  font:
+    text: 'Raleway'
+    code: 'Raleway Mono'
+  logo:
+    'logo.svg'
+
+# Customization
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/RodolfoFerro/'
+    - type: 'twitter'
+      link: 'https://twitter.com/FerroRodolfo/'
+    - type: 'linkedin'
+      link: 'https://www.linkedin.com/in/rodolfoferro/'

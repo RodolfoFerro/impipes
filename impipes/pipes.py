@@ -229,7 +229,7 @@ class Pipeline(object):
 		return_list: bool
 			If True the method returns a list of modified images. Default is False
 		save_steps: bool
-			If True modified imagea are saved after each filtration step in a folder Default is False
+			If True modified images are saved after each filtration step in a folder Default is False
 		
 		Return
 		----------
