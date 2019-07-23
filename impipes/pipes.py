@@ -5,6 +5,7 @@ Created on Mon Jun 10 13:54:03 2019
 @author: Cristian Vargas, Lukasz Kaczmarek, and Rodolfo Ferro
 """
 
+
 import os, os.path
 import filters
 import matplotlib.pyplot as plt
@@ -14,7 +15,7 @@ import cv2
 
 
 class Pipeline(object):
-	
+
 	def __init__(self, pipeline=[]):
 		
 		self.images = []
@@ -252,7 +253,23 @@ class Pipeline(object):
 				modified.append(temp)
 		
 		return modified
+  
+def superres_example():
+    test_path = './superres_test.tif'
+    if not os.path.exists(test_path):
+        print('Downloading test image.')
+        wget.download('https://www.dropbox.com/s/ybventnkdvymn8c/superres_test.tif?dl=1',test_path)
+        print('Download complete.')
+    pipeline = Pipeline()                 #create an instance of Pipeline()
+    pipeline.addImage(test_path)          #set the file with image to be processed
+    pipeline.setPrefix("filtered_")       #sets a prefix to be added at the beginning file names with modified images
+    pipeline.setSufix("")                 #sets a sufix to be added at the end of file names with modified images
+    pipeline.setOutputFileType("png")     #modified images shall be stored as png files
+    pipeline.setOutputPath('./')          #sets a path to a folder where modified images are to be stored
+    pipeline.add(filters.SuperRes(ks=23))
 
+    pipeline.run(save_files=True) 
+ 
 def example():
 	"""TODO. Example function.
 	"""
