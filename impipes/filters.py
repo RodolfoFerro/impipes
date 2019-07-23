@@ -9,11 +9,6 @@ import numpy as np
 import cv2
 from scipy.ndimage.filters import median_filter
 
-import os
-from fastai.basic_train import load_learner
-from fastai.torch_core import tensor, to_np
-from fastai.vision import ImageImageList, get_transforms, imagenet_stats, Image
-import wget
 
 class Filter(object):
     """
@@ -112,11 +107,77 @@ class Kernel(Filter):
             kernel_sum = 0
             for line in kernel:
                 kernel_sum += sum(line)
+            
+            if kernel_sum == 0:
+                kernel_sum = 0.1
             kernel = np.array(kernel).astype("float32") / kernel_sum
+            #kernel = np.array(kernel).astype("float32")
             self.filteredImage = cv2.filter2D(self.image, -1, kernel)
 
         return self.filteredImage
 
+class Sharpen(Kernel):
+	"""
+    Sharpens an image by slding a kernel [[-1,-1,-1], [-1,9,-1], [-1,-1,-1]].
+
+    Parameters
+    ----------
+    image : numpy.ndarray
+            A NumPy's ndarray from cv2.imread as an input.
+    
+    Returns
+    -------
+    numpy.ndarray
+            A NumPy's ndarray of an image with gamma modified.
+    """
+	def __init__(self, image=None):
+		Kernel.__init__(self, image=image)
+		self.kernel = [[-1,-1,-1], [-1,9,-1], [-1,-1,-1]]
+        
+        
+class Excessive(Kernel):
+	"""
+    Sharpens an image by slding a kernel [[1,1,1], [1,-7,1], [1,1,1]].
+
+    Parameters
+    ----------
+    image : numpy.ndarray
+            A NumPy's ndarray from cv2.imread as an input.
+    
+    Returns
+    -------
+    numpy.ndarray
+            A NumPy's ndarray of an image with gamma modified.
+    """
+	def __init__(self, image=None):
+		Kernel.__init__(self, image=image)
+		self.kernel = [[1,1,1], [1,-7,1], [1,1,1]]
+        
+class EdgeEnhance(Kernel):
+	"""
+    Sharpens an image by slding a kernel [[-1,-1,-1,-1,-1],
+                                          [-1,2,2,2,-1],
+                                          [-1,2,8,2,-1],
+                                          [-1,2,2,2,-1],
+                                          [-1,-1,-1,-1,-1]]/8.0.
+
+    Parameters
+    ----------
+    image : numpy.ndarray
+            A NumPy's ndarray from cv2.imread as an input.
+    
+    Returns
+    -------
+    numpy.ndarray
+            A NumPy's ndarray of an image with gamma modified.
+    """
+	def __init__(self, image=None):
+		Kernel.__init__(self, image=image)
+		self.kernel = [[-1,-1,-1,-1,-1],
+                          [-1,2,2,2,-1],
+                          [-1,2,8,2,-1],
+                          [-1,2,2,2,-1],
+                          [-1,-1,-1,-1,-1]]
 
 class Denoise(Filter):
     """
@@ -462,7 +523,7 @@ class CLAHE(Filter):
 
             self.filteredImage = cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
         return self.filteredImage
-    
+
 class SuperRes(Filter):
     """
     Increases the resolution of an image. The process involves first blurring the image using a Gaussian blur to smoothen pixels, 
@@ -528,6 +589,4 @@ class SuperRes(Filter):
         _, img_hr, _ = self.sr_model.predict(blur)
         self.filtered_image =  cv2.cvtColor(to_np(img_hr.permute(1,2,0)), cv2.COLOR_BGR2RGB) * 255.
         return self.filtered_image.astype(np.uint8)
-
-
 
