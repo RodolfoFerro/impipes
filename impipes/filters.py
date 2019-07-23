@@ -484,7 +484,12 @@ class SuperRes(Filter):
     numpy.ndarray
         A NumPy's ndarray of an image.
     """
-    def __init__(self, image=None, ks:int = 3, size:int = 500):
+    def __init__(self, mode = None, image=None, ks:int = 3, size:int = 500):
+        assert mode in [None,'satellite'], "Available modes are: [satellite]."
+        
+        if mode == None:
+            self.mode = 'satellite'
+        
         self.ks = ks
         if image is not None:
             self.setImage(image)
@@ -492,13 +497,15 @@ class SuperRes(Filter):
         
         #Load model
         self.model_path = './model'
-        weights = self.model_path+'/export.pkl'
         if not os.path.isdir(self.model_path):
             os.mkdir(self.model_path)
-        if not os.path.exists(weights):
-            print('Downloading model weights.')
-            wget.download('https://www.dropbox.com/s/3q219uhh1uc0xmx/export.pkl?dl=1',self.model_path+'/export.pkl')
-            print('Download complete')
+            
+        if self.mode == 'satellite':
+            weights = self.model_path+'/export.pkl'
+            if not os.path.exists(weights):
+                print('Downloading model weights.')
+                wget.download('https://www.dropbox.com/s/3q219uhh1uc0xmx/export.pkl?dl=1',self.model_path+'/export.pkl')
+                print('Download complete')
         
         #Create model and load weights
         self.sr_model = load_learner(self.model_path)
