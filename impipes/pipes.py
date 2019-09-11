@@ -7,7 +7,7 @@ Created on Mon Jun 10 13:54:03 2019
 
 import os
 import os.path
-import filters
+from .filters import *
 import matplotlib.pyplot as plt
 import numpy
 import wget
@@ -258,10 +258,10 @@ def example():
 
     pipeline = Pipeline()
 
-    pipeline.add(filters.Dehaze())
-    pipeline.add(filters.Gamma(gamma=1.8))
-    pipeline.add(filters.Kernel(kernel=[[1, 1, 1], [1, 20, 1], [1, 1, 1]]))
-    pipeline.add(filters.CLAHE())
+    pipeline.add(Dehaze())
+    pipeline.add(Gamma(gamma=1.8))
+    pipeline.add(Kernel(kernel=[[1, 1, 1], [1, 20, 1], [1, 1, 1]]))
+    pipeline.add(CLAHE())
 
     pipeline.addInputFolder(cwd)
     pipeline.setOutputPath(cwd)

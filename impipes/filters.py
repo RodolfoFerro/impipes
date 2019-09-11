@@ -11,9 +11,6 @@ from scipy.ndimage.filters import median_filter
 
 
 class Filter(object):
-    """
-    Base class for all filters.
-    """
 
     def __init__(self, image=None):
         if image is not None:
@@ -30,17 +27,11 @@ class Filter(object):
             self.image = image
 
     def run(self):
-        """
-        This method should be adjusted individually for each filter class.
-        Contains code of the main image process of a filter.
-        Should return a processed image.
-        """
         return self.filteredImage
 
 
 class Gamma(Filter):
-    """
-    Adjusts gamma value on input image.
+    """Adjusts gamma value on input image.
 
     Parameters
     ----------
@@ -74,8 +65,7 @@ class Gamma(Filter):
 
 
 class Kernel(Filter):
-    """
-    Slides a kernel over an input image.
+    """Slides a kernel over an input image.
 
     Parameters
     ----------
@@ -114,8 +104,7 @@ class Kernel(Filter):
 
 
 class Denoise(Filter):
-    """
-    Non Local Means Denosing based on OpenCV built in method.
+    """Non Local Means Denosing based on OpenCV built in method.
 
     Parameters
     ----------
@@ -147,13 +136,14 @@ class Denoise(Filter):
 
 
 class Dehaze(Filter):
-    """
-    Dehazing of an image based on Dark Channel Prior method.
+    """Dehazing of an image based on Dark Channel Prior method.
 
     Parameters
     ----------
     image : numpy.ndarray
             A NumPy's ndarray from cv2.imread as an input.
+    strength : integer (optional)
+            defines strength of dehazing operation.
 
     Returns
     -------
@@ -167,8 +157,7 @@ class Dehaze(Filter):
         self.filteredImage = None
 
     def _get_dark_channel(self, img):
-        """
-        Internal method called from _get_transmission() method
+        """Internal method called from _get_transmission() method
         (not to be used out of Dehaze class) provides dark channel of
         an RGB image (1 layer image composed of darkests of RGB pixels).
 
@@ -191,8 +180,7 @@ class Dehaze(Filter):
         return cv2.erode(dark, kernel)
 
     def _get_atmospheric_light(self, img, dark):
-        """
-        Internal method called from run() method (not to be used out
+        """Internal method called from run() method (not to be used out
         of Dehaze class). Provides estimation of the atmosferic light (A)
         for an image.
 
@@ -230,8 +218,7 @@ class Dehaze(Filter):
         return (np.array(img_vec[position])).reshape(1, 3)
 
     def _get_transmission(self, img, A):
-        """
-        Subfunction for dehaze function (not to be used out of dehaze)
+        """Subfunction for dehaze function (not to be used out of dehaze)
         provides map of estimated transmission for an image.
 
         Parameters
@@ -254,8 +241,7 @@ class Dehaze(Filter):
         return 1 - 0.95 * self._get_dark_channel(img_t)
 
     def _refine_transmission(self, img, t_est):
-        """
-        Subfunction for dehaze function (not to be used out of dehaze)
+        """Subfunction for dehaze function (not to be used out of dehaze)
         refines map of estimated transmission with soft matting method.
 
         Parameters
@@ -289,8 +275,7 @@ class Dehaze(Filter):
         return mean_a * gray + mean_b
 
     def _recover(self, img, t, A):
-        """
-        Subfunction for dehaze function (not to be used out of dehaze)
+        """Subfunction for dehaze function (not to be used out of dehaze)
         recovers dehazed image for a hazed one.
 
         Parameters
@@ -335,8 +320,7 @@ class Dehaze(Filter):
 
 
 class Unsharp(Filter):
-    """
-    Unsharp masking on input image.
+    """Unsharp masking on input image.
 
     Parameters
     ----------
@@ -366,8 +350,7 @@ class Unsharp(Filter):
         self.ustrength = ustrength
 
     def _unsharp_channel(self, chan, sigma, strength):
-        """
-        Unsharp masking on input image channel.
+        """Unsharp masking on input image channel.
 
         Parameters
         ----------
@@ -376,7 +359,7 @@ class Unsharp(Filter):
         sigma : integer
                 A integer containing the size of the footprint to apply to
                 a median filter to the image.
-        ustrength : float
+        strength : float
                 A float containing the amount of the Laplacian version of
                 the image to add or take,
 
@@ -413,19 +396,17 @@ class Unsharp(Filter):
 
 
 class CLAHE(Filter):
-    """
-    Contrast Limited Adaptive Histogram Equalization.
-    Based on https://stackoverflow.com/questions/25008458/how-to-apply-clahe-on-rgb-color-images
+    """Contrast Limited Adaptive Histogram Equalization.
 
     Parameters
     ----------
-    img : numpy.ndarray
+    image : numpy.ndarray
         A NumPy's ndarray from cv2.imread as an input.
-    clip_limit: float
+    clip_limit : float
         Clip threshold for CLAHE.
-    tile_grid_size: int
+    tile_grid_size : int
         Size of the grid to perform CLAHE calculation.
-    apply: int
+    apply : int
         Set this if you want to reapply clahe to reduce the clip overshoot.
 
     Returns
