@@ -103,6 +103,72 @@ class Kernel(Filter):
         return self.filteredImage
 
 
+class Sharpen(Kernel):
+    """Sharpens an image by slding a kernel
+    [[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]].
+
+    Parameters
+    ----------
+    image : numpy.ndarray
+            A NumPy's ndarray from cv2.imread as an input.
+
+    Returns
+    -------
+    numpy.ndarray
+            A NumPy's ndarray of an image with gamma modified.
+    """
+
+    def __init__(self, image=None):
+        Kernel.__init__(self, image=image)
+        self.kernel = [[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]]
+
+
+class Excessive(Kernel):
+    """Sharpens an image by slding a kernel [[1, 1, 1], [1, -7, 1], [1, 1, 1]].
+
+    Parameters
+    ----------
+    image : numpy.ndarray
+            A NumPy's ndarray from cv2.imread as an input.
+
+    Returns
+    -------
+    numpy.ndarray
+            A NumPy's ndarray of an image with gamma modified.
+    """
+
+    def __init__(self, image=None):
+        Kernel.__init__(self, image=image)
+        self.kernel = [[1, 1, 1], [1, -7, 1], [1, 1, 1]]
+
+
+class EdgeEnhance(Kernel):
+    """Sharpens an image by slding a kernel [[-1, -1, -1, -1, -1],
+                                             [-1,  2,  2,  2, -1],
+                                             [-1,  2,  8,  2, -1],
+                                             [-1,  2,  2,  2, -1],
+                                             [-1, -1, -1, -1, -1]]/8.0.
+
+    Parameters
+    ----------
+    image : numpy.ndarray
+            A NumPy's ndarray from cv2.imread as an input.
+
+    Returns
+    -------
+    numpy.ndarray
+            A NumPy's ndarray of an image with gamma modified.
+    """
+
+    def __init__(self, image=None):
+        Kernel.__init__(self, image=image)
+        self.kernel = [[-1, -1, -1, -1, -1],
+                       [-1, 2, 2, 2, -1],
+                       [-1, 2, 8, 2, -1],
+                       [-1, 2, 2, 2, -1],
+                       [-1, -1, -1, -1, -1]]
+
+
 class Denoise(Filter):
     """Non Local Means Denosing based on OpenCV built in method.
 
